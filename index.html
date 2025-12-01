@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#2c3e50">
     <title>Diet Berbasis Kurva Metabolisme</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
@@ -395,28 +394,28 @@
         </header>
 
         <div class="row">
-            <div class="card calculator" role="region" aria-labelledby="calcTitle">
-                <h2 id="calcTitle">📊 Kalkulator Metabolisme</h2>
+            <div class="card calculator">
+                <h2>📊 Kalkulator Metabolisme</h2>
                 <form id="metabolismForm">
                     <div class="form-group">
                         <label for="weight">Berat Badan (kg):</label>
-                        <input type="number" id="weight" step="0.1" min="30" max="200" required inputmode="decimal" autocomplete="weight">
+                        <input type="number" id="weight" step="0.1" min="30" max="200" required>
                     </div>
                     
                     <div class="form-group">
                         <label for="height">Tinggi Badan (cm):</label>
-                        <input type="number" id="height" step="0.1" min="100" max="250" required inputmode="decimal" autocomplete="height">
+                        <input type="number" id="height" step="0.1" min="100" max="250" required>
                     </div>
                     
                     <div class="form-group">
                         <label for="age">Usia (tahun):</label>
-                        <input type="number" id="age" min="10" max="100" required inputmode="numeric" autocomplete="bday-year">
+                        <input type="number" id="age" min="10" max="100" required>
                     </div>
                     
                     <div class="form-group">
                         <label for="activities">Level Aktivitas:</label>
                         <select id="activities" required>
-                            <option value="jarang olahraga">Jarang (sedikit/nihil olahraga)</option>
+                            <option value="jarang olahraga">jarang olahraga</option>
                             <option value="ringan">Ringan (1-3 hari/minggu)</option>
                             <option value="sedang" selected>Sedang (3-5 hari/minggu)</option>
                             <option value="berat">Berat (6-7 hari/minggu)</option>
@@ -424,10 +423,10 @@
                         </select>
                     </div>
                     
-                    <button type="submit" class="btn-calculate" aria-label="Hitung Laju Metabolisme">Hitung Laju Metabolisme</button>
+                    <button type="submit" class="btn-calculate">Hitung Laju Metabolisme</button>
                 </form>
                 
-                <div id="results" class="results" style="display: none;" aria-live="polite">
+                <div id="results" class="results" style="display: none;">
                     <h3>Hasil Perhitungan:</h3>
                     <div class="result-item">
                         <span>BMR (Jumlah Energi yang Dibutuhkan):</span>
@@ -437,19 +436,19 @@
                         <span>TDEE (Total Pengeluaran Energi):</span>
                         <strong id="tdeeResult">0</strong> kkal/hari
                     </div>
-                    <div class="alert" id="analysisAlert" role="status">
+                    <div class="alert" id="analysisAlert">
                         <!-- Analisis akan ditampilkan di sini -->
                     </div>
-                    <button id="showDashboard" class="btn-dashboard" aria-haspopup="dialog">Lihat Dashboard Lengkap</button>
+                    <button id="showDashboard" class="btn-dashboard">Lihat Dashboard Lengkap</button>
                 </div>
             </div>
             
-            <div class="card chart-container" role="region" aria-labelledby="chartTitle">
-                <h2 id="chartTitle">📈 Kurva Laju Pembakaran Kalori</h2>
+            <div class="card chart-container">
+                <h2>📈 Kurva Laju Pembakaran Kalori</h2>
                 <div class="chart-wrapper">
-                    <canvas id="metabolismChart" aria-label="Grafik laju pembakaran kalori" role="img"></canvas>
+                    <canvas id="metabolismChart"></canvas>
                 </div>
-                <div class="legend" aria-hidden="false">
+                <div class="legend">
                     <div class="legend-item">
                         <span class="color-box" style="background-color: #4A90E2;"></span>
                         <span>Kalori Harian (E)</span>
@@ -467,160 +466,6 @@
             <div class="concept">
                 <h3>Rumus Turunan yang Digunakan:</h3>
                 <div class="formula">dE/dt = ΔKalori / ΔWaktu</div>
-                <p>Dimana:</p>
-                <ul>
-                    <li><strong>dE/dt</strong> = Laju perubahan pembakaran kalori</li>
-                    <li><strong>ΔKalori</strong> = Perubahan konsumsi/pembakaran kalori</li>
-                    <li><strong>ΔWaktu</strong> = Perubahan waktu (hari)</li>
-                </ul>
-                <p class="highlight">Sistem akan mendeteksi jika slope dE/dt menurun, yang mengindikasikan penurunan efisiensi metabolisme!</p>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        let metabolismChart = null;
-        let currentData = null;
-
-        document.getElementById('metabolismForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const weight = parseFloat(document.getElementById('weight').value);
-            const height = parseFloat(document.getElementById('height').value);
-            const age = parseInt(document.getElementById('age').value);
-            const activity = document.getElementById('activities').value;
-            
-            // Hitung BMR (Basal Metabolic Rate) - Rumus Mifflin-St Jeor (pria)
-            const bmr = 10 * weight + 6.25 * height - 5 * age + 5;
-            
-            // Faktor aktivitas
-            const faktor_aktivitas = {
-                'jarang olahraga': 1.2,
-                'ringan': 1.375,
-                'sedang': 1.55,
-                'berat': 1.725,
-                'sangat_berat': 1.9
-            };
-            
-            const tdee = bmr * (faktor_aktivitas[activity] || 1.2);
-            
-            // Generate data simulasi untuk kurva (30 hari)
-            const days = Array.from({length: 30}, (_, i) => i + 1);
-            
-            // Simulasi data kalori harian dengan variasi
-            const baseCalories = days.map(day => {
-                // Tambahkan sedikit random dan mungkin tren
-                const randomVariation = (Math.random() - 0.5) * 200;
-                const trend = day * 0.5; // sedikit tren naik
-                return Math.max(0, tdee + randomVariation + trend); // pastikan tak negatif
-            });
-            
-            // Hitung turunan (dE/dt)
-            const derivatives = calculateDerivative(baseCalories, days);
-            
-            // Analisis slope
-            const analysisResult = analyzeSlope(derivatives);
-            
-            // Simpan data global untuk dashboard
-            currentData = {
-                bmr,
-                tdee,
-                days,
-                calories: baseCalories,
-                derivatives,
-                analysis: analysisResult,
-                profile: {
-                    weight,
-                    height,
-                    age,
-                    activity
-                }
-            };
-            
-            // Update tampilan hasil
-            document.getElementById('bmrResult').textContent = bmr.toFixed(2);
-            document.getElementById('tdeeResult').textContent = tdee.toFixed(2);
-            
-            // Update chart
-            updateChart(days, baseCalories, derivatives);
-            
-            // Tampilkan analisis
-            const alertDiv = document.getElementById('analysisAlert');
-            alertDiv.textContent = analysisResult;
-            
-            if (analysisResult.includes('WARNING')) {
-                alertDiv.className = 'alert warning';
-            } else if (analysisResult.includes('PERHATIAN')) {
-                alertDiv.className = 'alert info';
-            } else {
-                alertDiv.className = 'alert success';
-            }
-            
-            // Tampilkan results
-            document.getElementById('results').style.display = 'block';
-
-            // On mobile, scroll results into view for better UX
-            setTimeout(() => {
-                const resultsElem = document.getElementById('results');
-                if (resultsElem) {
-                    resultsElem.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                }
-            }, 150);
-        });
-
-        document.getElementById('showDashboard').addEventListener('click', function() {
-            if (!currentData) {
-                alert('Harap hitung metabolisme terlebih dahulu!');
-                return;
-            }
-            
-            // Tampilkan dashboard dalam modal atau sebagai bottom-sheet bila di mobile
-            showDashboardModal();
-        });
-
-        function calculateDerivative(caloriesData, timeData) {
-            if (caloriesData.length < 2) {
-                return [0];
-            }
-            
-            const derivatives = [];
-            for (let i = 1; i < caloriesData.length; i++) {
-                const dt = timeData[i] - timeData[i-1];
-                if (dt > 0) {
-                    const dE = caloriesData[i] - caloriesData[i-1];
-                    derivatives.push(dE / dt);
-                } else {
-                    derivatives.push(0);
-                }
-            }
-            
-            // Tambahkan 0 untuk titik pertama
-            return [0, ...derivatives];
-        }
-
-        function analyzeSlope(derivatives) {
-            if (derivatives.length < 3) {
-                return "Data belum cukup untuk analisis";
-            }
-            
-            // Hitung rata-rata slope 3 titik terakhir
-            const recentSlope = derivatives.slice(-3).reduce((a, b) => a + b, 0) / 3;
-            let previousSlope = recentSlope;
-            
-            if (derivatives.length >= 6) {
-                previousSlope = derivatives.slice(-6, -3).reduce((a, b) => a + b, 0) / 3;
-            }
-            
-            if (recentSlope < previousSlope * 0.7) {  // Penurunan >30%
-                return "⚠️ WARNING: Penurunan signifikan dalam laju pembakaran kalori!";
-            } else if (recentSlope < previousSlope) {
-                return "ℹ️ PERHATIAN: Tren penurunan laju metabolisme terdeteksi";
-            } else {
-                return "✅ Laju metabolisme stabil/naik";
-            }
-        }
-
-        function updateChart(days, calories, derivatii / ΔWaktu</div>
                 <p>Dimana:</p>
                 <ul>
                     <li><strong>dE/dt</strong> = Laju perubahan pembakaran kalori</li>
@@ -712,6 +557,14 @@
             
             // Tampilkan results
             document.getElementById('results').style.display = 'block';
+
+             // On mobile, scroll results into view for better UX
+            setTimeout(() => {
+                const resultsElem = document.getElementById('results');
+                if (resultsElem) {
+                    resultsElem.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            }, 150);
         });
 
         document.getElementById('showDashboard').addEventListener('click', function() {
@@ -1022,5 +875,4 @@
         };
     </script>
 </body>
-
 </html>
