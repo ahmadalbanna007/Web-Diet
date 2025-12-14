@@ -1,0 +1,611 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", system-ui, sans-serif;
+  background:
+    radial-gradient(circle at 0% 0%, #f3a52f 0%, #d18324 28%, transparent 55%),
+    radial-gradient(circle at 80% 80%, #4aa2e9 0%, #17446e 35%, #050709 75%),
+    #000;
+  color: #fff;
+}
+
+h1 {
+  font-size: 48px;
+  margin-bottom: 40px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px 24px;
+}
+
+.form-row {
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  font-size: 14px;
+  margin-bottom: 4px;
+  color: #ddd;
+}
+
+input, select {
+  padding: 10px;
+  border-radius: 6px;
+  border: none;
+  font-size: 14px;
+}
+
+button {
+  margin-top: 20px;
+  padding: 12px;
+  background: #4aa2e9;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.result-card {
+    margin-top: 14px;
+    padding: 12px;
+    border-radius: 12px;
+    background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+}
+
+.chart-box {
+  height: 320px;
+}
+
+.info {
+  font-size: 12px;
+  color: #ccc;
+}
+/* Reset singkat */
+*{box-sizing:border-box}
+:root{
+  --bg1:#0b2230;
+  --accent:#4aa2e9;
+  --accent2:#f3a52f;
+  --card: rgba(255,255,255,0.03);
+  --glass: rgba(255,255,255,0.04);
+  --muted:#cfdff0;
+}
+
+/* Body background gradien hero */
+body{
+  margin:0;
+  min-height:100vh;
+  font-family: "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial;
+  color:#eef6ff;
+  background:
+    radial-gradient(circle at 0% 0%, var(--accent2) 0%, #d18324 28%, transparent 55%),
+    radial-gradient(circle at 80% 80%, var(--accent) 0%, #17446e 35%, #021016 75%),
+    #001218;
+}
+
+/* hero */
+.hero{
+  padding:40px 40px;
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+  position: relative;
+  z-index: 5;
+}
+.hero-inner{
+  max-width:1200px;
+  margin:0 auto;
+}
+.hero h1{ font-size:40px; margin:0 0 6px; font-weight:600;}
+.sub{ opacity:0.9; margin:0 0 16px; color:rgba(230,240,255,0.9) }
+
+/* hero actions */
+.hero-actions{ display:flex; gap:12px; margin-top:12px; }
+.btn{
+  background:transparent;
+  border:1px solid rgba(255,255,255,0.06);
+  color:var(--muted);
+  padding:8px 14px;
+  border-radius:10px;
+  cursor:pointer;
+  transition: all .18s ease;
+  font-weight:600;
+}
+.btn:hover{ transform:translateY(-4px); box-shadow: 0 8px 18px rgba(0,0,0,0.6); }
+.btn.primary{ background: var(--accent); color:#012235; border: none; }
+.btn.ghost{ background: transparent; color:var(--muted); }
+
+
+
+/* panel */
+/* ====== PANEL PREMIUM (Upgrade 4 + Animasi + Glass UI) ====== */
+
+.panel{
+    display:none !important;
+    margin-bottom:28px;
+    padding:18px;
+    border-radius:14px;
+    background: rgba(255,255,255,0.06);          /* Glass Transparency */
+    backdrop-filter: blur(15px);                  /* Blur efek elegan */
+    border: 1px solid rgba(255,255,255,0.12);
+    opacity: 0;
+}
+
+.panel.active{
+    display:block !important;
+    opacity:100;
+    transform:none;
+    animation: fadeUp 0.3s ease both;
+}
+@keyframes fadeUp{ from{opacity:0; transform:translateY(8px)} to{opacity:50; transform:none} }
+
+.panel h2{ margin:0 0 12px; color:#f5fbff; font-size:22px; }
+
+/* Panel grid for theory cards */
+.panel-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.card{
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  border-radius:14px;
+  padding:14px;
+  border: 1px solid rgba(255,255,255,0.04);
+}
+.card h3{ margin:0 0 8px; font-size:16px; color:#e9f6ff }
+
+.rumus{
+  font-size:20px;
+  font-weight: bold;
+}
+/* layout for form panel */
+.grid-2 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 25px;
+}
+
+.form-card{ 
+  padding:18px;
+  max-width: 100%;
+  overflow: hidden;
+}
+.info-card{ padding:14px; }
+
+/* row: label + input */
+.row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 12px;
+}
+
+/* MOBILE FIX */
+@media (max-width: 600px) {
+    .row {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .label-box {
+        min-width: 100%;
+        width: 100%;
+        text-align: left;
+    }
+
+    .input-box,
+    select {
+        width: 100%;
+    }
+}
+
+.label-box{
+  min-width:150px;
+  background: var(--glass);
+  padding:10px;
+  border-radius:8px;
+  color:var(--muted);
+  font-weight:600;
+  text-align:left;
+  border:1px solid rgba(255,255,255,0.02);
+}
+.input-box{
+  flex:1;
+  padding:10px 12px;
+  border-radius:8px;
+  border:none;
+  background: rgba(0,0,0,0.25);
+  color:#f7fbff;
+  outline: 2px solid rgba(255,255,255,0.02);
+}
+.input-box::placeholder{ color: rgba(255,255,255,0.5) }
+
+/* result box */
+.result-box{
+  margin-top:12px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  padding:10px;
+  border-radius:10px;
+  border:1px solid rgba(255,255,255,0.03);
+  color:#f5fbff;
+}
+/* ===== Glow Effect untuk Card Hasil ===== */
+.result-card {
+    transition: box-shadow 0.4s ease, transform 0.3s ease;
+}
+
+/* Glow aktif */
+.result-card.glow {
+    box-shadow:
+        0 0 8px rgba(120, 200, 255, 0.6),
+        0 0 20px rgba(120, 200, 255, 0.4),
+        0 0 35px rgba(120, 200, 255, 0.25);
+    transform: translateY(-2px);
+}
+
+
+
+@keyframes glowPulse{
+    0%{
+        box-shadow: 0 0 0 rgba(0,255,255,0);
+        transform: scale(1);
+    }
+    30%{
+        box-shadow:
+            0 0 18px rgba(0,255,255,.6),
+            0 0 32px rgba(0,180,255,.4);
+        transform: scale(1.02);
+    }
+    100%{
+        box-shadow: 0 0 0 rgba(0,255,255,0);
+        transform: scale(1);
+    }
+}
+
+
+/* actions */
+.actions{ margin-top:10px; display:flex; gap:8px; }
+
+/* food list */
+.food-list{ list-style:none; padding:0; margin:0 0 12px 0; color:var(--muted); }
+.food-list li{ margin-bottom:8px; font-size:14px; }
+
+/* chart grid */
+.chart-grid{ display:grid; grid-template-columns: 1fr 1fr; gap:18px; margin-top:12px; }
+.chart-card{ background:var(--card); border-radius:12px; padding:12px; border:1px solid rgba(255,255,255,0.03); min-height:240px; }
+.chart-box{ position:relative; height:260px; }
+
+/* footer */
+.footer{ max-width:1200px; margin:20px auto; padding:18px; text-align:center; color:rgba(255,255,255,0.5) }
+
+/* responsive */
+@media (max-width:960px){
+  .grid-2{ grid-template-columns: 1fr; }
+  .chart-grid{ grid-template-columns: 1fr; }
+  .label-box{ min-width:130px; }
+  .hero h1{ font-size:32px }
+}
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 40px;
+  position: relative;
+  z-index: 1;
+}
+
+.topbar .left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.topbar img {
+  width: 42px;
+}
+
+.topbar .group {
+  font-size: 14px;
+  opacity: 0.8;
+}
+
+.topbar .course {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.topbar .social a {
+  margin-left: 25px;
+  font-size: 13px;
+  opacity: 0.7;
+  text-decoration: none;
+  color: white;
+}
+/* Feature Box */
+.feature-box{
+    display:flex;
+    gap:25px;
+    margin-top:35px;
+    flex-wrap:wrap;
+    justify-content:center;
+}
+
+.card-menu{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:15px 32px;
+    background:rgba(255,255,255,.2);
+    backdrop-filter:blur(8px);
+    border-radius:15px;
+    border:1px solid rgba(255,255,255,.35);
+    shadow: 10px;
+    cursor:pointer;
+    font-weight:600;
+    transition:.25s;
+    color:#fff;
+}
+
+.card-menu .icon{
+    font-size:22px;
+}
+
+.card-menu:hover{
+    transform:translateY(-4px);
+    background:rgba(255,255,255,.32);
+    box-shadow:0 8px 22px rgba(0,0,0,.25);
+}
+
+/* mode aktif (kotak Tes / Form menyala) */
+.card-menu.active{
+    background:#fff;
+    color:#0a2e52;
+    border:none;
+}
+
+.card-menu.active:hover{
+    box-shadow:0 8px 22px rgba(255,255,255,.6);
+}
+.usage-section{
+    margin: 80px auto;
+    max-width: 1000px;
+    padding: 45px;
+    border-radius: 18px;
+    background: rgba(255,255,255,0.08);
+    backdrop-filter: blur(12px);
+    color: #fff;
+    line-height: 1.7;
+}
+
+.usage-section h2{
+    font-size: 30px;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.usage-steps{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px,1fr));
+    gap: 25px;
+    margin-top: 30px;
+}
+
+.step{
+    background: rgba(255,255,255,0.12);
+    border-radius: 15px;
+    padding: 20px;
+    transition: .3s ease;
+}
+
+.step:hover{
+    transform: translateY(-5px);
+    background: rgba(255,255,255,0.18);
+}
+
+.num{
+    width: 35px;
+    height: 35px;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color:#000;
+}
+
+.tips-box{
+    background: rgba(255,255,255,0.15);
+    padding: 25px;
+    border-radius: 15px;
+    margin-top: 35px;
+}
+
+.tips-box ul{
+    margin-left: 20px;
+    line-height: 1.8;
+}
+
+/* Tambahan animasi tombol */
+.sidebar button.active {
+    background: #ffffff22;
+    box-shadow: 0 0 12px rgba(255,255,255,0.4);
+    transform: scale(1.04);
+    transition: 0.3s;
+}
+.sidebar button.active {
+    background: rgba(255,255,255,0.15);
+    border-left: 4px solid #00eaff;
+    color: #00eaff;
+    font-weight: bold;
+}
+html, body {
+  width: 100%;
+  min-height: 100%;
+  overflow-x: hidden;
+}
+
+.container {
+    max-width: 1100px;
+    padding: 16px;
+    margin: 0 auto;
+}
+/* ===== Info Dalam Card (Aman, Tidak Tertimpa) ===== */
+
+.step{
+    position: relative;
+    overflow: hidden;
+}
+
+/* Kotak informasi */
+.step-info{
+    margin-top: 12px;
+    padding: 14px 16px;
+
+    background: rgba(255,255,255,0.18);
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.25);
+
+    font-size: 14px;
+    line-height: 1.6;
+    color: #ffffff;
+
+    max-height: 0;
+    opacity: 0;
+    transform: translateY(8px);
+
+    transition: all .3s ease;
+}
+
+/* Muncul saat hover */
+.step:hover .step-info{
+    max-height: 200px;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* ===== FIX FORM KELUAR DARI CARD (MOBILE SAFE) ===== */
+
+@media (max-width: 600px){
+  .rumus{
+  font-size:12px;
+  font-weight: bold;
+}
+
+    .row{
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .label-box{
+        min-width: 100%;
+        text-align: left;
+    }
+
+    .input-box{
+        width: 100%;
+    }
+}
+@keyframes glowPulse {
+    0% {
+        box-shadow: 0 0 0 rgba(120,200,255,0.0);
+    }
+    50% {
+        box-shadow:
+            0 0 10px rgba(120,200,255,0.7),
+            0 0 25px rgba(120,200,255,0.4);
+    }
+    100% {
+        box-shadow: 0 0 0 rgba(120,200,255,0.0);
+    }
+}
+
+.result-card.glow {
+    animation: glowPulse 1.2s ease-out;
+}
+
+.food-input {
+    display: grid;
+    grid-template-columns: 1fr;
+}
+
+@media (min-width: 600px) {
+    .food-input {
+        grid-template-columns: 1fr 80px auto;
+    }
+}
+
+
+.food-input select,
+.food-input input {
+    padding: 10px;
+    border-radius: 10px;
+    border: none;
+    background: rgba(255,255,255,0.12);
+    color: #fff;
+}
+
+.food-input button {
+    padding: 10px 14px;
+    border-radius: 10px;
+    border: none;
+    background: #4aa2e9;
+    color: #fff;
+    font-weight: 600;
+}
+
+.food-list {
+    margin-top: 12px;
+    font-size: 14px;
+}
+
+.food-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 6px 0;
+    border-bottom: 1px dashed rgba(255,255,255,0.2);
+}
+
+.total-kalori {
+    margin-top: 14px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(255,255,255,0.3);
+    font-size: 15px;
+}
+
+.card,
+.form-card,
+.info-card {
+    max-width: 100%;
+    overflow: hidden;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 12px;
+    margin-top: 14px;
+}
+
+.btn.reset {
+    flex: 1;
+    background:transparent;
+    border:1px solid rgba(255,255,255,0.06);
+  color:var(--muted);
+  padding:8px 14px;
+  border-radius:10px;
+  cursor:pointer;
+}
+
+.btn.clear {
+    flex: 1;
+    background: #dc3545;
+}
+
+.btn.reset:hover,
+.btn.clear:hover {
+    filter: brightness(1.1);
+}

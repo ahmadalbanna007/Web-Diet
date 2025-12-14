@@ -1,864 +1,658 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Diet Berbasis Kurva Metabolisme</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Kalkulator Metabolisme & Estimasi Diet</title>
+
+    <!-- MathJax -->
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        /* Salin semua CSS dari style.css di sini (diperbarui untuk mobile-friendly) */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
 
-        html, body {
-            height: 100%;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-            -webkit-text-size-adjust: 100%;
-            -ms-text-size-adjust: 100%;
-        }
+    <!-- Icon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            min-height: 100vh;
-            padding: 16px;
-            color: #333;
-            line-height: 1.4;
-        }
-
-        .container {
-            max-width: 1100px;
-            margin: 0 auto;
-            background-color: white;
-            border-radius: 16px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-            overflow: hidden;
-            padding: 24px;
-        }
-
-        header {
-            text-align: center;
-            margin-bottom: 28px;
-            padding-bottom: 16px;
-            border-bottom: 1px solid #eee;
-        }
-
-        h1 {
-            color: #2c3e50;
-            font-size: 2rem;
-            margin-bottom: 8px;
-            background: linear-gradient(45deg, #3498db, #2ecc71);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .subtitle {
-            color: #7f8c8d;
-            font-size: 1rem;
-            font-style: italic;
-        }
-
-        .row {
-            display: flex;
-            gap: 20px;
-            margin-bottom: 22px;
-            flex-wrap: wrap;
-        }
-
-        .card {
-            background: white;
-            border-radius: 12px;
-            padding: 20px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.06);
-            flex: 1;
-            min-width: 280px;
-        }
-
-        .calculator {
-            flex: 1;
-        }
-
-        .chart-container {
-            flex: 2;
-        }
-
-        .form-group {
-            margin-bottom: 16px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 6px;
-            color: #2c3e50;
-            font-weight: 600;
-            font-size: 0.95rem;
-        }
-
-        input, select {
-            width: 100%;
-            padding: 12px 14px;
-            border: 2px solid #e0e0e0;
-            border-radius: 10px;
-            font-size: 16px;
-            transition: border-color 0.25s;
-            -webkit-appearance: none;
-            appearance: none;
-        }
-
-        input:focus, select:focus {
-            outline: none;
-            border-color: #3498db;
-            box-shadow: 0 4px 12px rgba(52,152,219,0.08);
-        }
-
-        .btn-calculate {
-            background: linear-gradient(45deg, #3498db, #2ecc71);
-            color: white;
-            border: none;
-            padding: 14px 18px;
-            font-size: 16px;
-            border-radius: 10px;
-            cursor: pointer;
-            width: 100%;
-            font-weight: 700;
-            transition: transform 0.18s, box-shadow 0.18s;
-            touch-action: manipulation;
-            -webkit-tap-highlight-color: transparent;
-            min-height: 48px;
-        }
-
-        .btn-calculate:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 18px rgba(52, 152, 219, 0.18);
-        }
-
-        .results {
-            margin-top: 20px;
-            padding: 16px;
-            background: #f8f9fa;
-            border-radius: 10px;
-            border-left: 5px solid #3498db;
-        }
-
-        .result-item {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 12px;
-            padding: 8px 0;
-            border-bottom: 1px solid #f0f0f0;
-            font-size: 0.98rem;
-        }
-
-        .alert {
-            padding: 12px;
-            border-radius: 10px;
-            margin-top: 12px;
-            font-weight: 600;
-            font-size: 0.95rem;
-        }
-
-        .alert.warning {
-            background-color: #fff3cd;
-            border: 1px solid #ffc107;
-            color: #856404;
-        }
-
-        .alert.info {
-            background-color: #d1ecf1;
-            border: 1px solid #17a2b8;
-            color: #0c5460;
-        }
-
-        .alert.success {
-            background-color: #d4edda;
-            border: 1px solid #28a745;
-            color: #155724;
-        }
-
-        .chart-wrapper {
-            height: 420px;
-            position: relative;
-        }
-
-        .legend {
-            display: flex;
-            justify-content: center;
-            gap: 18px;
-            margin-top: 14px;
-            flex-wrap: wrap;
-        }
-
-        .legend-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 0.95rem;
-        }
-
-        .color-box {
-            width: 18px;
-            height: 18px;
-            border-radius: 4px;
-        }
-
-        .formula {
-            font-family: 'Courier New', monospace;
-            font-size: 1.2rem;
-            background: #2c3e50;
-            color: white;
-            padding: 12px;
-            border-radius: 10px;
-            text-align: center;
-            margin: 12px 0;
-        }
-
-        .highlight {
-            background-color: #fffde7;
-            padding: 12px;
-            border-radius: 10px;
-            border-left: 5px solid #ffc107;
-            margin-top: 12px;
-            font-size: 0.95rem;
-        }
-
-        .info {
-            margin-top: 20px;
-        }
-
-        footer {
-            text-align: center;
-            margin-top: 28px;
-            padding-top: 12px;
-            border-top: 1px solid #eee;
-            color: #7f8c8d;
-            font-size: 0.95rem;
-        }
-
-        .footer-note {
-            max-width: 800px;
-            margin: 16px auto;
-            padding: 12px;
-            background: #f8f9fa;
-            border-radius: 10px;
-            font-style: italic;
-            font-size: 0.95rem;
-        }
-
-        .btn-dashboard {
-            display: inline-block;
-            background: #2c3e50;
-            color: white;
-            padding: 12px 18px;
-            text-decoration: none;
-            border-radius: 10px;
-            margin-top: 12px;
-            transition: background 0.2s;
-            cursor: pointer;
-            min-height: 44px;
-            font-weight: 600;
-        }
-
-        .btn-dashboard:hover {
-            background: #34495e;
-        }
-
-        /* Modal base (JS will create modal inline styles, but provide mobile-friendly fallbacks) */
-        .dashboard-modal-content {
-            max-width: 900px;
-            width: 100%;
-            padding: 24px;
-            border-radius: 14px;
-        }
-
-        .dashboard-canvas {
-            width: 100% !important;
-            height: 360px !important;
-        }
-
-        /* Accessibility / touch improvements */
-        button, a {
-            -webkit-tap-highlight-color: rgba(0,0,0,0.05);
-        }
-
-        @media (max-width: 768px) {
-            .row {
-                flex-direction: column;
-            }
-
-            .card {
-                min-width: 100%;
-            }
-
-            h1 {
-                font-size: 1.6rem;
-            }
-
-            .chart-wrapper {
-                height: 320px;
-            }
-
-            .dashboard-canvas {
-                height: 300px !important;
-            }
-
-            .legend {
-                justify-content: flex-start;
-            }
-
-            .container {
-                padding: 18px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            body {
-                padding: 10px;
-            }
-
-            .container {
-                padding: 14px;
-                border-radius: 12px;
-            }
-
-            h1 {
-                font-size: 1.4rem;
-            }
-
-            label {
-                font-size: 0.95rem;
-            }
-
-            input, select {
-                padding: 12px;
-                font-size: 16px;
-            }
-
-            .btn-calculate {
-                padding: 14px;
-                font-size: 16px;
-                border-radius: 12px;
-                min-height: 50px;
-            }
-
-            .btn-dashboard {
-                width: 100%;
-                text-align: center;
-                padding: 12px;
-                border-radius: 12px;
-                min-height: 50px;
-            }
-
-            .chart-wrapper {
-                height: 260px;
-            }
-
-            .dashboard-canvas {
-                height: 240px !important;
-            }
-
-            .legend {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 10px;
-            }
-
-            /* Modal becomes bottom sheet on very small screens */
-            .mobile-bottom-sheet {
-                align-items: flex-end !important;
-            }
-
-            .mobile-bottom-sheet .dashboard-modal-content {
-                border-bottom-left-radius: 0;
-                border-bottom-right-radius: 0;
-            }
-        }
-
-        /* Landscape handling for small devices */
-        @media (orientation: landscape) and (max-width: 812px) {
-            .chart-wrapper {
-                height: 220px;
-            }
-        }
-
-    </style>
+    <!-- CSS External -->
+    <link rel="stylesheet" href="style.css">
 </head>
-<body>
-    <div class="container">
-        <header>
-            <h1>🔥 Web Pengatur Diet Berbasis Kurva Laju Pembakaran Kalori</h1>
-            <p class="subtitle">Analisis Perubahan Tingkat Metabolisme terhadap Aktivitas</p>
-        </header>
 
-        <div class="row">
-            <div class="card calculator">
-                <h2>📊 Kalkulator Metabolisme</h2>
-                <form id="metabolismForm">
-                    <div class="form-group">
-                        <label for="weight">Berat Badan (kg):</label>
-                        <input type="number" id="weight" step="0.1" min="30" max="200" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="height">Tinggi Badan (cm):</label>
-                        <input type="number" id="height" step="0.1" min="100" max="250" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="age">Usia (tahun):</label>
-                        <input type="number" id="age" min="10" max="100" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="activities">Level Aktivitas:</label>
-                        <select id="activities" required>
-                            <option value="jarang olahraga">jarang olahraga</option>
-                            <option value="ringan">Ringan (1-3 hari/minggu)</option>
-                            <option value="sedang" selected>Sedang (3-5 hari/minggu)</option>
-                            <option value="berat">Berat (6-7 hari/minggu)</option>
-                            <option value="sangat_berat">Sangat Berat (atlet)</option>
-                        </select>
-                    </div>
-                    
-                    <button type="submit" class="btn-calculate">Hitung Laju Metabolisme</button>
-                </form>
-                
-                <div id="results" class="results" style="display: none;">
-                    <h3>Hasil Perhitungan:</h3>
-                    <div class="result-item">
-                        <span>BMR (Jumlah Energi yang Dibutuhkan):</span>
-                        <strong id="bmrResult">0</strong> kkal/hari
-                    </div>
-                    <div class="result-item">
-                        <span>TDEE (Total Pengeluaran Energi):</span>
-                        <strong id="tdeeResult">0</strong> kkal/hari
-                    </div>
-                    <div class="alert" id="analysisAlert">
-                        <!-- Analisis akan ditampilkan di sini -->
-                    </div>
-                    <button id="showDashboard" class="btn-dashboard">Lihat Dashboard Lengkap</button>
-                </div>
+<body>
+
+    <!-- ========================== HEADER ========================== -->
+    <header class="topbar">
+        <div class="left">
+            <img src="logo.jpg" alt="Logo Kampus">
+            <div>
+                <div class="group">Turunan – Kelompok 1</div>
+                <div class="course">Kalkulus Diferensial</div>
             </div>
-            
-            <div class="card chart-container">
-                <h2>📈 Kurva Laju Pembakaran Kalori</h2>
-                <div class="chart-wrapper">
-                    <canvas id="metabolismChart"></canvas>
+        </div>
+
+        <div class="social">
+            <a href="https://instagram.com/jlvnnw" target="_blank" class="instagram">
+                <i class="fab fa-instagram"></i>
+            </a>
+            <a href="https://wa.me/6281274330984" target="_blank" class="whatsapp">
+                <i class="fab fa-whatsapp"></i>
+            </a>
+            <a href="mailto:julvinrnwaruwu@gmail.com?subject=Pertanyaan&body=Halo..." class="email">
+                <i class="fas fa-envelope"></i>
+            </a>
+        </div>
+    </header>
+
+    <!-- ========================== HERO ========================== -->
+    <header class="hero">
+        <div class="hero-inner">
+            <h1>Kalkulator Metabolisme & Estimasi Diet</h1>
+            <p class="sub">Analisis & prediksi estimasi kalori selama 7 hari serta Berat 30 hari.</p>
+
+            <!-- Menu -->
+            <div class="feature-box">
+                <div class="card-menu" data-open="panel-theory">
+                    <span class="icon">🏠︎</span> <span>Teori & Rumus</span>
                 </div>
-                <div class="legend">
-                    <div class="legend-item">
-                        <span class="color-box" style="background-color: #4A90E2;"></span>
-                        <span>Kalori Harian (E)</span>
-                    </div>
-                    <div class="legend-item">
-                        <span class="color-box" style="background-color: #E25A5A;"></span>
-                        <span>Pembakaran Kalori (dE/dt)</span>
-                    </div>
+                <div class="card-menu" data-open="panel-usage">
+                    <span class="icon">📄</span> <span>Cara Penggunaan</span>
+                </div>
+                <div class="card-menu active" data-open="panel-test">
+                    <span class="icon">📝</span> <span>Calorie Calculator</span>
                 </div>
             </div>
         </div>
+    </header>
+
+    <!-- ========================== MAIN ========================== -->
+    <main class="container">
+
+        <!-- ==================== PANEL 1: TEORI ==================== -->
+        <section id="panel-theory" class="panel">
+            <h2>🏠︎ Teori & Rumus</h2>
+
+            <div class="panel-grid">
+
+                <!-- Card 1 -->
+                <article class="card">
+                    <h3>Landasan Teori</h3>
+
+                    <p><b>BMR</b> adalah jumlah energi minimum yang diperlukan tubuh untuk 
+                        mempertahankan fungsi vital saat istirahat. Rumus ini mepertimbangkan
+                        berat badan, tinggi badan, usia, dan jenis kelamin.</p>
+                    <p><b>TDEE</b> adalah total energi harian yang dikeluarkan tubuh termasuk
+                        aktivitas fisik. Nilai ini digunakan menentukan kebutuhan kalori untuk
+                        menjaga, menaikkan, atau menurunkan berat badan.</p>
+                    <p><b>Selisih Kalori<b> digunakan untuk melihat apakah tubuh berada dalam kondisi
+                    defisit (turun berat) atau surplus (naik berat).</p>
+
+                    <p>📊 Grafik Kalori membantu memonitor:</p>
+                    <ul>
+                        <li>Surplus kalori → potensi naik berat</li>
+                        <li>Defisit kalori → potensi turun berat</li>
+                        <li>Seimbang → berat stabil</li>
+                    </ul>
+
+                    <p>📅 Grafik Tren 30 Hari memberi gambaran jangka panjang pola diet.</p>
+                </article>
+
+                <!-- Card 2 -->
+                <article class="card">
+                    <h2>Rumus BMR – TDEE – Selisih</h2>
+
+                    <h3>1. Rumus BMR (Mifflin–St Jeor)</h3>
+                    <p>Pria:</p>
+                    <h3><center>\[BMR :\]</center></h3>
+                    <p class="rumus">\[(10×berat)+(6.25×tinggi)-(5×usia)+5 \]</p>
+
+                    <p>Wanita:</p>
+                    <h3><center>\[BMR :\]</center></h3>
+                    <p class="rumus">\[(10×berat)+(6.25×tinggi)-(5×usia)-161 \]</p>
+
+                    <h3>2. Rumus TDEE</h3>
+                    <p>\[ TDEE = BMR × Faktor\ Aktivitas \]</p>
+
+                    <h3>3. Selisih Kalori</h3>
+                    <p>\[ Selisih = Intake - TDEE \]</p>
+                </article>
+
+                <!-- Card 3 -->
+                <article class="card">
+                    <h3>Landasan Teori Kalkulus</h3>
+
+                    <p>\[ \frac{dW}{dt} = k (C_{in} - C_{out}) \]</p>
+
+                    <p>\[ ΔE = \int_0^T (C_{in} - TDEE)\, dt \]</p>
+                </article>
+            </div>
+        </section>
+
+        <!-- ==================== PANEL 2: CARA PAKAI ==================== -->
+        <section id="panel-usage" class="panel">
+            <h2>Cara Penggunaan</h2>
+            <p>Kalkulator ini menghitung BMR, TDEE dan memberi rekomendasi diet.</p>
+<div class="usage-steps"> 
+<div class="step">
+    <span class="num">1</span>
+    <h3>Masukkan Data</h3>
+    <div class="step-info">
+        Masukkan berat badan, tinggi, usia, jenis kelamin, dan kalori harian Anda.
+    </div>
+</div>
+<div class="step">
+    <span class="num">2</span>
+    <h3>Pilih Aktivitas</h3>
+    <div class="step-info">
+        Pilih tingkat aktivitas fisik untuk menentukan faktor TDEE.
+    </div>
+</div>
+<div class="step">
+    <span class="num">3</span>
+    <h3>Klik Hitung</h3>
+
+    <div class="step-info">
+        Sistem akan menghitung BMR, TDEE, dan selisih kalori secara otomatis.
+    </div>
+</div>
+<div class="step">
+    <span class="num">4</span>
+    <h3>Lihat Hasil</h3>
+
+    <div class="step-info">
+        Hasil perhitungan dan grafik estimasi dapat dilihat secara langsung.
+    </div>
+</div>
+
+            
+        </section>
+
+        <!-- ==================== PANEL 3: FORM ==================== -->
+        <section id="panel-test" class="panel active">
+            <h2>Form Input & Tes</h2>
+
+            <div class="grid-2">
+
+                <!-- Form -->
+                <div class="card form-card">
+                    <h3>Input</h3>
+
+                    <div class="row">
+                        <div class="label-box">Berat (kg)</div>
+                        <input id="weight" type="number" class="input-box">
+                    </div>
+
+                    <div class="row">
+                        <div class="label-box">Tinggi (cm)</div>
+                        <input id="height" type="number" class="input-box">
+                    </div>
+
+                    <div class="row">
+                        <div class="label-box">Usia</div>
+                        <input id="age" type="number" class="input-box">
+                    </div>
+
+                    <div class="row">
+                        <div class="label-box">Jenis Kelamin</div>
+                        <select id="gender" class="input-box">
+                            <option value="male">Laki-laki</option>
+                            <option value="female">Perempuan</option>
+                        </select>
+                    </div>
+
+                    <div class="row">
+                        <div class="label-box">Aktivitas</div>
+                        <select id="activity" class="input-box">
+                            <option value="1.2">Tidak Aktif</option>
+                            <option value="1.375">Ringan (pekerjaan rumah)</option>
+                            <option value="1.55">Sedang  (olahraga 2-3 kali seminggu)</option>
+                            <option value="1.725">Berat  (olahraga 4-6 kali seminggu)</option>
+                            <option value="1.9">Atlet  (Performa tinggi/Profesional)</option>
+                        </select>
+                    </div>
+
+                    <div class="row">
+                        <div class="label-box">Kalori / hari</div>
+                        <input id="calorie" type="number" class="input-box">
+                    </div>
+
+                    <div class="row">
+                        <div class="label-box">Tujuan</div>
+                        <select id="goal" class="input-box">
+                            <option value="cutting">Diet (mengurangi berat badan)</option>
+                            <option value="bulking">Bulking (menambah berat badan)</option>
+                        </select>
+                    </div>
+
+                    <div class="result-card" id="resultCard">
+                        <div><strong>BMR (Basal Metabolic Rate):</strong> <span id="bmrValue">—</span> kCal</div>
+                        <div><strong>TDEE (Total Daily Energy Expenditure):</strong> <span id="tdeeValue">—</span> kCal</div>
+                        <div><strong>Selisih kalori:</strong> <span id="diffValue">—</span> kCal</div>
+                    </div>
+
+                    <div class="action-buttons">
+                        <button id="calcBtn" class="hitungBtn">Hitung</button>                         <button id="resetBtn" class="btn ghost">Reset Hasil</button>
+    <button id="btnReset" class="btn reset">Reset Data</button>
+</div>
+
+                      </div>
+                </div>
+
+                <!-- Info -->
+                <aside class="card info-card">
+                    <div class="kalori-makanan-card">
+
+    <h3>Kalori Makanan</h3>
+
+    <p>Nasi 100g : 130 kCal</p>
+    <p>Dada ayam 100g : 165 kCal</p>
+    <p>Sayur 100g : 25 kCal</p>
+
+    <!-- Tambahan fitur -->
+    <div class="food-input">
+        <select id="foodSelect">
+            <option value="">Pilih makanan</option>
+            <option value="130">Nasi Putih (100g)</option>
+            <option value="165">Dada Ayam (100g)</option>
+            <option value="250">Ayam Goreng</option>
+            <option value="70">Telur Rebus</option>
+            <option value="380">Mie Instan</option>
+            <option value="120">Tempe Goreng</option>
+        </select>
+
+        <input
+            type="number"
+            id="foodQty"
+            placeholder="Porsi"
+            min="1"
+            value="1"
+        />
+
+        <button id="addFoodBtn">Tambah</button>
     </div>
 
+    <div class="food-list" id="foodList"></div>
+
+    <div class="total-kalori">
+        Total Kalori Konsumsi:
+        <strong><span id="totalKalori">0</span> kCal</strong>
+    </div>
+
+</div>
+
+
+                    <h4>Grafik</h4>
+                    <button class="btn" data-open="panel-graphs">Buka Grafik</button>
+                </aside>
+
+            </div>
+        </section>
+
+        <!-- ==================== PANEL 4: GRAFIK ==================== -->
+        <section id="panel-graphs" class="panel">
+            <h2>Grafik</h2>
+
+            <div class="chart-grid">
+                <div class="chart-card">
+                    <h3>Estimasi Kalori (7 Hari)</h3>
+                    <canvas id="kaloriChart"></canvas>
+                </div>
+
+                <div class="chart-card">
+                    <h3>Prediksi Berat (30 Hari)</h3>
+                    <canvas id="weightChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ========================== FOOTER ========================== -->
+    <footer class="footer">
+        <small>Proyek Kelompok 1 PSIK 25D</small>
+    </footer>
+
+    <!-- ========================== JAVASCRIPT ========================== -->
     <script>
-        let metabolismChart = null;
-        let currentData = null;
+        /* Semua script yang kamu kirim dimasukkan di sini TANPA mengubah logika */
 
-        document.getElementById('metabolismForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const weight = parseFloat(document.getElementById('weight').value);
-            const height = parseFloat(document.getElementById('height').value);
-            const age = parseInt(document.getElementById('age').value);
-            const activity = document.getElementById('activities').value;
-            
-            // Hitung BMR (Basal Metabolic Rate) - Rumus Mifflin-St Jeor
-            const bmr = 10 * weight + 6.25 * height - 5 * age + 5;
-            
-            // Faktor aktivitas
-            const faktor_aktivitas = {
-                'jarang olahraga': 1.2,
-                'ringan': 1.375,
-                'sedang': 1.55,
-                'berat': 1.725,
-                'sangat_berat': 1.9
-            };
-            
-            const tdee = bmr * faktor_aktivitas[activity];
-            
-            // Generate data simulasi untuk kurva (30 hari)
-            const days = Array.from({length: 30}, (_, i) => i + 1);
-            
-            // Simulasi data kalori harian dengan variasi
-            const baseCalories = days.map(day => {
-                // Tambahkan sedikit random dan mungkin tren
-                const randomVariation = (Math.random() - 0.5) * 200;
-                const trend = day * 0.5; // sedikit tren naik
-                return tdee + randomVariation + trend;
-            });
-            
-            // Hitung turunan (dE/dt)
-            const derivatives = calculateDerivative(baseCalories, days);
-            
-            // Analisis slope
-            const analysisResult = analyzeSlope(derivatives);
-            
-            // Simpan data global untuk dashboard
-            currentData = {
-                bmr,
-                tdee,
-                days,
-                calories: baseCalories,
-                derivatives,
-                analysis: analysisResult,
-                profile: {
-                    weight,
-                    height,
-                    age,
-                    activity
-                }
-            };
-            
-            // Update tampilan hasil
-            document.getElementById('bmrResult').textContent = bmr.toFixed(2);
-            document.getElementById('tdeeResult').textContent = tdee.toFixed(2);
-            
-            // Update chart
-            updateChart(days, baseCalories, derivatives);
-            
-            // Tampilkan analisis
-            const alertDiv = document.getElementById('analysisAlert');
-            alertDiv.textContent = analysisResult;
-            
-            if (analysisResult.includes('WARNING')) {
-                alertDiv.className = 'alert warning';
-            } else if (analysisResult.includes('PERHATIAN')) {
-                alertDiv.className = 'alert info';
-            } else {
-                alertDiv.className = 'alert success';
-            }
-            
-            // Tampilkan results
-            document.getElementById('results').style.display = 'block';
+        /* ————————— Utility ————————— */
+const qs = v => document.querySelector(v);
+const qsa = v => document.querySelectorAll(v);
 
-             // On mobile, scroll results into view for better UX
-            setTimeout(() => {
-                const resultsElem = document.getElementById('results');
-                if (resultsElem) {
-                    resultsElem.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                }
-            }, 150);
-        });
+let kaloriChart = null;
+let weightChart = null;
+let totalKalori = 0;
+let foodData = [];
 
-        document.getElementById('showDashboard').addEventListener('click', function() {
-            if (!currentData) {
-                alert('Harap hitung metabolisme terlebih dahulu!');
-                return;
-            }
-            
-            // Tampilkan dashboard dalam modal atau alihkan ke halaman baru
-            // Karena kita dalam satu halaman, kita bisa tampilkan bagian dashboard yang lebih detail
-            showDashboardModal();
-        });
+/* Element DOM */
+const panels = qsa('.panel');
+const openButtons = qsa('[data-open]');
 
-        function calculateDerivative(caloriesData, timeData) {
-            if (caloriesData.length < 2) {
-                return [0];
-            }
-            
-            const derivatives = [];
-            for (let i = 1; i < caloriesData.length; i++) {
-                const dt = timeData[i] - timeData[i-1];
-                if (dt > 0) {
-                    const dE = caloriesData[i] - caloriesData[i-1];
-                    derivatives.push(dE / dt);
-                } else {
-                    derivatives.push(0);
-                }
-            }
-            
-            // Tambahkan 0 untuk titik pertama
-            return [0, ...derivatives];
-        }
+const weightInput = qs('#weight');
+const heightInput = qs('#height');
+const ageInput = qs('#age');
+const genderInput = qs('#gender');
+const activityInput = qs('#activity');
+const calorieInput = qs('#calorie');
+const goalInput = qs('#goal');
 
-        function analyzeSlope(derivatives) {
-            if (derivatives.length < 3) {
-                return "Data belum cukup untuk analisis";
-            }
-            
-            // Hitung rata-rata slope 3 titik terakhir
-            const recentSlope = derivatives.slice(-3).reduce((a, b) => a + b, 0) / 3;
-            let previousSlope = recentSlope;
-            
-            if (derivatives.length >= 6) {
-                previousSlope = derivatives.slice(-6, -3).reduce((a, b) => a + b, 0) / 3;
-            }
-            
-            if (recentSlope < previousSlope * 0.7) {  // Penurunan >30%
-                return "⚠️ WARNING: Penurunan signifikan dalam laju pembakaran kalori!";
-            } else if (recentSlope < previousSlope) {
-                return "ℹ️ PERHATIAN: Tren penurunan laju metabolisme terdeteksi";
-            } else {
-                return "✅ Laju metabolisme stabil/naik";
-            }
-        }
+const bmrDisplay = qs('#bmrValue');
+const tdeeDisplay = qs('#tdeeValue');
+const diffDisplay = qs('#diffValue');
 
-        function updateChart(days, calories, derivatives) {
-            const ctx = document.getElementById('metabolismChart').getContext('2d');
-            
-            if (metabolismChart) {
-                metabolismChart.destroy();
-            }
-            
-            metabolismChart = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: days,
-                    datasets: [
-                        {
-                            label: 'Kalori Harian (E)',
-                            data: calories,
-                            borderColor: '#4A90E2',
-                            backgroundColor: 'rgba(74, 144, 226, 0.1)',
-                            borderWidth: 3,
-                            fill: true,
-                            tension: 0.4,
-                            yAxisID: 'y'
-                        },
-                        {
-                            label: 'Pembakaran Kalori (dE/dt)',
-                            data: derivatives,
-                            borderColor: '#E25A5A',
-                            backgroundColor: 'rgba(226, 90, 90, 0.1)',
-                            borderWidth: 2,
-                            borderDash: [5, 5],
-                            fill: false,
-                            tension: 0.4,
-                            yAxisID: 'y1'
-                        }
-                    ]
+const calcBtn = qs('#calcBtn');
+const resetBtn = qs('#resetBtn');
+
+/* ————————— Panel open ————————— */
+function openPanel(id) {
+    panels.forEach(p => p.classList.remove('active'));
+    qs('#' + id).classList.add('active');
+
+    if (id === "panel-graphs") {
+        initOrUpdateCharts();
+    }
+}
+
+openButtons.forEach(btn =>
+    btn.addEventListener('click', () => openPanel(btn.dataset.open))
+);
+
+/* ————————— BMR Calc ————————— */
+function calcBMR(w, h, a, gender) {
+    if (!w || !h || !a) return 0;
+
+    if (gender === "male") {
+        return (10 * w) + (6.25 * h) - (5 * a) + 5;
+    } else {
+        return (10 * w) + (6.25 * h) - (5 * a) - 161;
+    }
+}
+
+function animateValue(el, start, end, duration = 600) {
+    const range = end - start;
+    const startTime = performance.now();
+
+    function step(now) {
+        const progress = Math.min((now - startTime) / duration, 1);
+        el.textContent = Math.round(start + range * progress);
+        if (progress < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+}
+
+
+/* ————————— Grafik Data ————————— */
+function genKalori7days(tdee) {
+    return Array(7).fill(Math.round(tdee));
+}
+
+function genWeight30days(initialWeight, diff) {
+    const arr = [];
+    let w = Number(initialWeight);
+    const kgPerDay = diff / 7700; // 7700 kCal = 1 kg
+
+    for (let i = 0; i < 30; i++) {
+        w += kgPerDay;
+        arr.push(Number(w.toFixed(1)));
+    }
+    return arr;
+}
+
+/* ————————— Update Grafik ————————— */
+function initOrUpdateCharts() {
+
+    const w = Number(weightInput.value);
+    const h = Number(heightInput.value);
+    const a = Number(ageInput.value);
+    const g = genderInput.value;
+    const ac = Number(activityInput.value);
+    const intake = Number(calorieInput.value);
+
+    const bmr = calcBMR(w, h, a, g);
+    const tdee = bmr * ac;
+    const diff = Math.round(intake - tdee);
+
+    // Update display animasi
+    animateValue(bmrDisplay, Number(bmrDisplay.textContent) || 0, Math.round(bmr));
+    animateValue(tdeeDisplay, Number(tdeeDisplay.textContent) || 0, Math.round(tdee));
+    animateValue(diffDisplay, Number(diffDisplay.textContent) || 0, diff);
+
+    const kaloriData = genKalori7days(tdee);
+    const weightData = genWeight30days(w, diff);
+
+    const kaloriCtx = qs('#kaloriChart').getContext('2d');
+    const weightCtx = qs('#weightChart').getContext('2d');
+
+    // Chart Kalori
+    if (kaloriChart) {
+        kaloriChart.data.datasets[0].data = kaloriData;
+        kaloriChart.update();
+    } else {
+        kaloriChart = new Chart(kaloriCtx, {
+    type: 'line',
+    data: {
+        labels: ["1","2","3","4","5","6","7"],
+        datasets: [{
+            label: "Estimasi Kalori Terbakar",
+            data: kaloriData,
+            borderColor: "#4aa2e9",
+            backgroundColor: "rgba(74,162,233,0.12)",
+            tension: 0.4,
+            fill: true
+        }]
+    },
+    options: {
+        responsive: true,
+        scales: {
+            x: {
+                ticks: {
+                    color: "#ffffff",      // WARNA ANGKA 1–7
+                    font: {
+                        size: 13,
+                        weight: "600"
+                    }
                 },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    interaction: {
-                        mode: 'index',
-                        intersect: false,
+                title: {
+                    display: true,
+                    text: "Hari",
+                    align: "center",
+                    color: "#eaf4ff",
+                    font: {
+                        size: 14,
+                        weight: "600"
                     },
-                    stacked: false,
-                    scales: {
-                        x: {
-                            title: {
-                                display: true,
-                                text: 'Hari'
-                            }
-                        },
-                        y: {
-                            type: 'linear',
-                            display: true,
-                            position: 'left',
-                            title: {
-                                display: true,
-                                text: 'Kalori (kkal)'
-                            }
-                        },
-                        y1: {
-                            type: 'linear',
-                            display: true,
-                            position: 'right',
-                            title: {
-                                display: true,
-                                text: 'dE/dt (kkal/hari)'
-                            },
-                            grid: {
-                                drawOnChartArea: false,
-                            },
-                        }
+                    padding: {
+                        top: 10
                     }
                 }
-            });
+            },
+            y: {
+                ticks: {
+                    color: "#cfdff0"
+                }
+            }
+        },
+        plugins: {
+            legend: {
+                labels: {
+                    color: "#eaf4ff"
+                }
+            }
         }
+    }
+});
 
-        function showDashboardModal() {
-            // Buat modal untuk dashboard
-            const modal = document.createElement('div');
-            modal.style.position = 'fixed';
-            modal.style.top = '0';
-            modal.style.left = '0';
-            modal.style.width = '100%';
-            modal.style.height = '100%';
-            modal.style.backgroundColor = 'rgba(0,0,0,0.5)';
-            modal.style.display = 'flex';
-            modal.style.justifyContent = 'center';
-            modal.style.alignItems = 'center';
-            modal.style.zIndex = '1000';
-            
-            const modalContent = document.createElement('div');
-            modalContent.style.backgroundColor = 'white';
-            modalContent.style.padding = '30px';
-            modalContent.style.borderRadius = '15px';
-            modalContent.style.maxWidth = '90%';
-            modalContent.style.maxHeight = '90%';
-            modalContent.style.overflow = 'auto';
-            modalContent.style.position = 'relative';
-            
-            const closeBtn = document.createElement('button');
-            closeBtn.textContent = 'X';
-            closeBtn.style.position = 'absolute';
-            closeBtn.style.top = '10px';
-            closeBtn.style.right = '10px';
-            closeBtn.style.border = 'none';
-            closeBtn.style.background = '#ff4444';
-            closeBtn.style.color = 'white';
-            closeBtn.style.borderRadius = '50%';
-            closeBtn.style.width = '30px';
-            closeBtn.style.height = '30px';
-            closeBtn.style.cursor = 'pointer';
-            
-            closeBtn.addEventListener('click', function() {
-                document.body.removeChild(modal);
-            });
-            
-            // Isi modal dengan dashboard
-            modalContent.innerHTML = `
-                <h2>📊 Dashboard Analisis Metabolisme</h2>
-                <div style="display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 20px;">
-                    <div style="flex: 1; min-width: 250px;">
-                        <h3>Profil Pengguna</h3>
-                        <div style="margin-bottom: 10px;">
-                            <span>Berat Badan: </span>
-                            <strong>${currentData.profile.weight} kg</strong>
-                        </div>
-                        <div style="margin-bottom: 10px;">
-                            <span>Tinggi Badan: </span>
-                            <strong>${currentData.profile.height} cm</strong>
-                        </div>
-                        <div style="margin-bottom: 10px;">
-                            <span>Usia: </span>
-                            <strong>${currentData.profile.age} tahun</strong>
-                        </div>
-                        <div style="margin-bottom: 10px;">
-                            <span>Level Aktivitas: </span>
-                            <strong>${currentData.profile.activity}</strong>
-                        </div>
-                        <div style="margin-bottom: 10px;">
-                            <span>BMR: </span>
-                            <strong>${currentData.bmr.toFixed(2)} kkal/hari</strong>
-                        </div>
-                        <div style="margin-bottom: 10px;">
-                            <span>TDEE: </span>
-                            <strong>${currentData.tdee.toFixed(2)} kkal/hari</strong>
-                        </div>
-                    </div>
-                    <div style="flex: 1; min-width: 250px;">
-                        <h3>Analisis Metabolisme</h3>
-                        <div class="alert ${currentData.analysis.includes('WARNING') ? 'warning' : currentData.analysis.includes('PERHATIAN') ? 'info' : 'success'}" style="margin-bottom: 20px;">
-                            ${currentData.analysis}
-                        </div>
-                        <div style="background-color: #fffde7; padding: 15px; border-radius: 10px; border-left: 5px solid #ffc107;">
-                            <h4>Interpretasi:</h4>
-                            <p>Nilai <strong>dE/dt positif</strong> menunjukkan peningkatan efisiensi metabolisme.</p>
-                            <p>Nilai <strong>dE/dt negatif</strong> mengindikasikan penurunan laju pembakaran kalori.</p>
-                            <p>Trend yang menurun memerlukan penyesuaian aktivitas atau diet.</p>
-                        </div>
-                    </div>
-                </div>
-                <div style="height: 400px;">
-                    <canvas id="dashboardChart"></canvas>
-                </div>
-            `;
-            
-            modalContent.appendChild(closeBtn);
-            modal.appendChild(modalContent);
-            document.body.appendChild(modal);
-            
-            // Render chart di modal
-            const ctx = modalContent.querySelector('#dashboardChart').getContext('2d');
-            new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: currentData.days,
-                    datasets: [
-                        {
-                            label: 'Kalori Harian (E)',
-                            data: currentData.calories,
-                            borderColor: '#4A90E2',
-                            backgroundColor: 'rgba(74, 144, 226, 0.1)',
-                            borderWidth: 3,
-                            fill: true,
-                            tension: 0.4
+    }
+
+    // Chart Berat
+if (weightChart) {
+
+    weightChart.data.datasets[0].data = weightData;
+    weightChart.update();
+
+} else {
+
+    weightChart = new Chart(weightCtx, {
+        type: 'line',
+        data: {
+            labels: Array.from({ length: 30 }, (_, i) => `${i + 1}`),
+            datasets: [{
+                label: "Prediksi Berat (kg)",
+                data: weightData,
+                borderColor: "#ffd166",
+                backgroundColor: "rgba(255,209,102,0.06)",
+                tension: 0.35,
+                fill: true
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                x: {
+                    ticks: {
+                        color: "#ffffff",   // WARNA ANGKA 1–30
+                        font: {
+                            size: 11,
+                            weight: "600"
+                        },maxRotation: 0,
+        minRotation: 0,
+        autoSkip: true
+                    },
+                    title: {
+                        display: true,
+                        text: "Hari",
+                        align: "center",
+                        color: "#ffffff",   // WARNA TEKS "Hari"
+                        font: {
+                            size: 14,
+                            weight: "600"
                         },
-                        {
-                            label: 'Pembakaran Kalori dE/dt',
-                            data: currentData.derivatives,
-                            borderColor: '#E25A5A',
-                            backgroundColor: 'rgba(226, 90, 90, 0.1)',
-                            borderWidth: 2,
-                            borderDash: [5, 5],
-                            fill: false,
-                            tension: 0.4
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        y: {
-                            beginAtZero: false,
-                            title: {
-                                display: true,
-                                text: 'Kalori (kkal)'
-                            }
+                        padding: {
+                            top: 10
                         }
                     }
+                },
+                y: {
+                    ticks: {
+                        color: "#cfdff0"
+                    }
                 }
-            });
+            },
+            plugins: {
+                legend: {
+                    labels: {
+                        color: "#ffffff"
+                    }
+                }
+            }
         }
+    });
+}
 
-        // Inisialisasi chart kosong
-        window.onload = function() {
-            const ctx = document.getElementById('metabolismChart').getContext('2d');
-            metabolismChart = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: [],
-                    datasets: [
-                        {
-                            label: 'Kalori Harian (E)',
-                            data: [],
-                            borderColor: '#4A90E2',
-                            backgroundColor: 'rgba(74, 144, 226, 0.1)',
-                            borderWidth: 3,
-                            fill: true,
-                            tension: 0.4
-                        },
-                        {
-                            label: 'Pembakaran Kalori (dE/dt)',
-                            data: [],
-                            borderColor: '#E25A5A',
-                            backgroundColor: 'rgba(226, 90, 90, 0.1)',
-                            borderWidth: 2,
-                            borderDash: [5, 5],
-                            fill: false,
-                            tension: 0.4
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        y: {
-                            beginAtZero: true
-                        }
-                    }
-                }
-            });
-        };
+}
+
+/* ————————— Event ————————— */calcBtn.addEventListener("click", () => {
+    openPanel("panel-graphs");
+    initOrUpdateCharts();
+
+    const resultCard = document.getElementById("resultCard");
+    if (resultCard) {
+        resultCard.classList.remove("glow");
+        void resultCard.offsetWidth;
+        resultCard.classList.add("glow");
+    }
+});
+
+resetBtn.addEventListener("click", () => {
+    weightInput.value = "";
+    heightInput.value = "";
+    ageInput.value = "";
+    calorieInput.value = "";
+    genderInput.value = "male";
+    activityInput.value = "1.2";
+
+    animateValue(bmrDisplay, Number(bmrDisplay.textContent) || 0, 0);
+    animateValue(tdeeDisplay, Number(tdeeDisplay.textContent) || 0, 0);
+    animateValue(diffDisplay, Number(diffDisplay.textContent) || 0, 0);
+
+    if (qs('#panel-graphs').classList.contains('active')) {
+        initOrUpdateCharts();
+    }
+});
+
+const foodSelect = document.getElementById("foodSelect");
+const foodQty = document.getElementById("foodQty");
+const addFoodBtn = document.getElementById("addFoodBtn");
+const foodList = document.getElementById("foodList");
+const totalKaloriEl = document.getElementById("totalKalori");
+
+addFoodBtn.addEventListener("click", () => {
+    const kalori = Number(foodSelect.value);
+    const qty = Number(foodQty.value);
+
+    if (!kalori || qty <= 0) return;
+
+    const nama = foodSelect.options[foodSelect.selectedIndex].text;
+    const total = kalori * qty;
+
+    foodData.push({ nama, qty, total });
+    totalKalori += total;
+
+    updateTotalCalories();
+    renderFoodList();
+
+    foodQty.value = 1;
+});
+
+
+document.getElementById("btnReset").addEventListener("click", () => {
+    foodData = [];
+    totalKalori = 0;
+
+    renderFoodList();
+    updateTotalCalories();
+
+    foodSelect.selectedIndex = 0;
+    foodQty.value = 1;
+});
+
+function renderFoodList() {
+    foodList.innerHTML = "";
+
+    foodData.forEach((item, index) => {
+        const div = document.createElement("div");
+        div.className = "food-item";
+        div.innerHTML = `
+            <span>${item.nama} x${item.qty}</span>
+            <span>
+                ${item.total} kCal
+                <button class="hapus-btn" data-index="${index}">✕</button>
+            </span>
+        `;
+        foodList.appendChild(div);
+    });
+
+    // tombol hapus per item
+    document.querySelectorAll(".hapus-btn").forEach(btn => {
+        btn.addEventListener("click", e => {
+            const i = e.target.dataset.index;
+            totalKalori -= foodData[i].total;
+            foodData.splice(i, 1);
+            updateTotalCalories();
+            renderFoodList();
+        });
+    });
+}
+
+function updateTotalCalories() {
+    totalKaloriEl.textContent = totalKalori;
+}
+
+
+
+window.addEventListener("load", () => openPanel("panel-test"));
+
     </script>
-</body>
 
+</body>
 </html>
