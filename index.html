@@ -172,116 +172,105 @@
 
             <div class="grid-2">
 
-                <!-- Form -->
-                <div class="card form-card">
-                    <h3>Input</h3>
+    <!-- ================= KIRI: FORM INPUT ================= -->
+    <div class="card form-card">
+        <h3>Input</h3>
 
-                    <div class="row">
-                        <div class="label-box">Berat (kg)</div>
-                        <input id="weight" type="number" class="input-box">
-                    </div>
+        <div class="row">
+            <div class="label-box">Berat (kg)</div>
+            <input id="weight" type="number" class="input-box">
+        </div>
 
-                    <div class="row">
-                        <div class="label-box">Tinggi (cm)</div>
-                        <input id="height" type="number" class="input-box">
-                    </div>
+        <div class="row">
+            <div class="label-box">Tinggi (cm)</div>
+            <input id="height" type="number" class="input-box">
+        </div>
 
-                    <div class="row">
-                        <div class="label-box">Usia</div>
-                        <input id="age" type="number" class="input-box">
-                    </div>
+        <div class="row">
+            <div class="label-box">Usia</div>
+            <input id="age" type="number" class="input-box">
+        </div>
 
-                    <div class="row">
-                        <div class="label-box">Jenis Kelamin</div>
-                        <select id="gender" class="input-box">
-                            <option value="male">Laki-laki</option>
-                            <option value="female">Perempuan</option>
-                        </select>
-                    </div>
+        <div class="row">
+            <div class="label-box">Jenis Kelamin</div>
+            <select id="gender" class="input-box">
+                <option value="male">Laki-laki</option>
+                <option value="female">Perempuan</option>
+            </select>
+        </div>
 
-                    <div class="row">
-                        <div class="label-box">Aktivitas</div>
-                        <select id="activity" class="input-box">
-                            <option value="1.2">Tidak Aktif</option>
-                            <option value="1.375">Ringan (pekerjaan rumah)</option>
-                            <option value="1.55">Sedang  (olahraga 2-3 kali seminggu)</option>
-                            <option value="1.725">Berat  (olahraga 4-6 kali seminggu)</option>
-                            <option value="1.9">Atlet  (Performa tinggi/Profesional)</option>
-                        </select>
-                    </div>
+        <div class="row">
+            <div class="label-box">Aktivitas</div>
+            <select id="activity" class="input-box">
+                <option value="1.2">Tidak Aktif</option>
+                <option value="1.375">Ringan (Pekerjaan Rumah)</option>
+                <option value="1.55">Sedang (Olahraga 2-3 kali/minggu)</option>
+                <option value="1.725">Berat (olahraga 4-6 kali/minggu)</option>
+                <option value="1.9">Atlet (Performa Tinggi/Profesional)</option>
+            </select>
+        </div>
 
-                    <div class="row">
-                        <div class="label-box">Kalori / hari</div>
-                        <input id="calorie" type="number" class="input-box">
-                    </div>
+        <div class="row">
+            <div class="label-box">Kalori / hari</div>
+            <input id="calorie" type="number" class="input-box">
+        </div>
 
-                    <div class="row">
-                        <div class="label-box">Tujuan</div>
-                        <select id="goal" class="input-box">
-                            <option value="cutting">Diet (mengurangi berat badan)</option>
-                            <option value="bulking">Bulking (menambah berat badan)</option>
-                        </select>
-                    </div>
+        <div class="row">
+            <div class="label-box">Tujuan</div>
+            <select id="goal" class="input-box">
+                <option value="cutting">Diet (Menurunkan Berat Badan)</option>
+                <option value="bulking">Bulking (Menaikkan Berat Badan)</option>
+            </select>
+        </div>
 
-                    <div class="result-card" id="resultCard">
-                        <div><strong>BMR (Basal Metabolic Rate):</strong> <span id="bmrValue">—</span> kCal</div>
-                        <div><strong>TDEE (Total Daily Energy Expenditure):</strong> <span id="tdeeValue">—</span> kCal</div>
-                        <div><strong>Selisih kalori:</strong> <span id="diffValue">—</span> kCal</div>
-                    </div>
-
-                    <div class="action-buttons">
-                        <button id="calcBtn" class="hitungBtn">Hitung</button>                         <button id="resetBtn" class="btn ghost">Reset Hasil</button>
-    <button id="btnReset" class="btn reset">Reset Data</button>
-</div>
-
-                      </div>
-                </div>
-
-                <!-- Info -->
-                <aside class="card info-card">
-                    <div class="kalori-makanan-card">
-
-    <h3>Kalori Makanan</h3>
-
-    <p>Nasi 100g : 130 kCal</p>
-    <p>Dada ayam 100g : 165 kCal</p>
-    <p>Sayur 100g : 25 kCal</p>
-
-    <!-- Tambahan fitur -->
-    <div class="food-input">
-        <select id="foodSelect">
-            <option value="">Pilih makanan</option><br>
-            <option value="130">Nasi Putih (100g)</option>
-            <option value="165">Dada Ayam (100g)</option>
-            <option value="250">Ayam Goreng</option>
-            <option value="70">Telur Rebus</option>
-            <option value="380">Mie Instan</option>
-            <option value="120">Tempe Goreng</option>
-        </select>
-
-        <input
-            type="number"
-            id="foodQty"
-            placeholder="Porsi"
-            min="1"
-            value="1"
-        />
-
-        <button id="addFoodBtn">Tambah</button>
+        <div class="action-buttons">
+            <button id="calcBtn" class="hitungBtn">Hitung</button>
+            <button id="resetBtn" class="btn ghost">Reset Hasil</button>
+            <button id="btnReset" class="btn reset">Reset Data</button>
+        </div>
     </div>
 
-    <div class="food-list" id="foodList"></div>
+    <!-- ================= KANAN: HASIL + MAKANAN ================= -->
+    <div class="side-stack">
 
-    <div class="total-kalori">
-        Total Kalori Konsumsi:
-        <strong><span id="totalKalori">0</span> kCal</strong>
-    </div>
+        <!-- HASIL -->
+        <div class="result-card" id="resultCard">
+            <div><strong>BMR:</strong> <span id="bmrValue">—</span> kCal</div>
+            <div><strong>TDEE:</strong> <span id="tdeeValue">—</span> kCal</div>
+            <div><strong>Selisih:</strong> <span id="diffValue">—</span> kCal</div>
+        </div>
 
-</div>
-                    <button class="btn" data-open="panel-graphs">Buka Grafik</button>
-                </aside>
+        <!-- KALORI MAKANAN -->
+        <div class="card kalori-makanan-card">
+            <h3>Kalori Makanan</h3>
+            <div class="food-input">
+                <select id="foodSelect">
+                    <option value="">Pilih makanan</option>
+                    <option value="130">Nasi Putih (100g)</option>
+                    <option value="165">Dada Ayam (100g)</option>
+                    <option value="250">Ayam Goreng</option>
+                    <option value="70">Telur Rebus</option>
+                    <option value="380">Mie Instan</option>
+                    <option value="120">Tempe Goreng</option>
+                </select>
 
+                <input id="foodQty" type="number" min="1" value="1">
+                <button id="addFoodBtn">Tambah</button>
             </div>
+
+            <div class="food-list" id="foodList"></div>
+
+            <div class="total-kalori">
+                Total Kalori Konsumsi:
+                <strong><span id="totalKalori">0</span> kCal</strong>
+            </div>
+        </div>
+
+        <button class="btn" data-open="panel-graphs">Buka Grafik</button>
+    </div>
+
+</div>
+
         </section>
 
         <!-- ==================== PANEL 4: GRAFIK ==================== -->

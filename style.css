@@ -50,10 +50,10 @@ button {
   cursor: pointer;
 }
 .result-card {
-    margin-top: 14px;
-    padding: 12px;
-    border-radius: 12px;
-    background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+    background: linear-gradient(145deg, #101c2e, #0c1625);
+    border-radius: 14px;
+    padding: 16px;
+    font-size: 14px;
 }
 
 .chart-box {
@@ -165,8 +165,9 @@ body{
 /* layout for form panel */
 .grid-2 {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-    gap: 25px;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 20px;
+    align-items: start;
 }
 
 .form-card{ 
@@ -240,10 +241,8 @@ body{
 /* Glow aktif */
 .result-card.glow {
     box-shadow:
-        0 0 8px rgba(120, 200, 255, 0.6),
-        0 0 20px rgba(120, 200, 255, 0.4),
-        0 0 35px rgba(120, 200, 255, 0.25);
-    transform: translateY(-2px);
+        0 0 12px rgba(74,162,233,.45),
+        0 0 28px rgba(74,162,233,.25);
 }
 
 
@@ -283,7 +282,9 @@ body{
 
 /* responsive */
 @media (max-width:960px){
-  .grid-2{ grid-template-columns: 1fr; }
+  .grid-2 {
+        grid-template-columns: 1fr;
+    }
   .chart-grid{ grid-template-columns: 1fr; }
   .label-box{ min-width:130px; }
   .hero h1{ font-size:32px }
@@ -608,4 +609,15 @@ html, body {
 .btn.reset:hover,
 .btn.clear:hover {
     filter: brightness(1.1);
+}
+
+.side-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 16px; 
+}
+
+.kalori-makanan-card {
+    border-radius: 14px;
+    padding: 16px;
 }
